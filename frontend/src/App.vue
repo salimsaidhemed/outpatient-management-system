@@ -5,14 +5,36 @@
     </div>
 
     <div v-else-if="!user.authenticated" class="auth-screen">
-      <v-sheet class="login-panel" border>
-        <div class="brand-mark">OA</div>
-        <h1>Outpatient Admissions</h1>
-        <p>Sign in to continue to the front desk console.</p>
-        <v-btn color="primary" size="large" prepend-icon="mdi-login" @click="login">
-          Sign in
-        </v-btn>
-      </v-sheet>
+      <div class="login-layout">
+        <section class="login-copy">
+          <div class="brand-block login-brand">
+            <div class="brand-mark">OA</div>
+            <div>
+              <div class="brand-title">Outpatient Admissions</div>
+              <div class="brand-subtitle">Front desk console</div>
+            </div>
+          </div>
+          <h1>Secure admissions workspace</h1>
+          <p>Register patients, manage outpatient visits, and print admission receipts from one controlled access console.</p>
+          <div class="login-signals" aria-label="System highlights">
+            <span><v-icon icon="mdi-shield-check" /> Keycloak protected</span>
+            <span><v-icon icon="mdi-database-check" /> PostgreSQL backed</span>
+            <span><v-icon icon="mdi-printer-check" /> Receipt ready</span>
+          </div>
+        </section>
+
+        <v-sheet class="login-panel" border>
+          <div class="login-panel-header">
+            <v-icon icon="mdi-lock-outline" color="primary" />
+            <span>Authorized staff only</span>
+          </div>
+          <h2>Sign in to continue</h2>
+          <p>Use your admissions account to open the console.</p>
+          <v-btn block color="primary" size="large" prepend-icon="mdi-login" @click="login">
+            Sign in with Keycloak
+          </v-btn>
+        </v-sheet>
+      </div>
     </div>
 
     <template v-else>
@@ -42,13 +64,15 @@
       <v-app-bar-nav-icon class="d-md-none" @click="drawer = !drawer" />
       <v-toolbar-title>{{ currentTitle }}</v-toolbar-title>
       <v-spacer />
-      <v-chip color="secondary" variant="tonal" prepend-icon="mdi-account-circle">
-        {{ user.name || user.username }}
-      </v-chip>
-      <v-chip color="primary" variant="tonal" prepend-icon="mdi-calendar-clock">
-        {{ todayLabel }}
-      </v-chip>
-      <v-btn icon="mdi-logout" variant="text" @click="logout" />
+      <div class="appbar-actions">
+        <v-chip color="secondary" variant="tonal" prepend-icon="mdi-account-circle">
+          {{ user.name || user.username }}
+        </v-chip>
+        <v-chip color="primary" variant="tonal" prepend-icon="mdi-calendar-clock">
+          {{ todayLabel }}
+        </v-chip>
+        <v-btn icon="mdi-logout" variant="text" @click="logout" />
+      </div>
     </v-app-bar>
 
     <v-main>
