@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: admissions
+      POSTGRES_USER: admissions
+      POSTGRES_PASSWORD: admissions
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admissions -d admissions"]
+      interval: 5s
+      timeout: 5s
+      retries: 8
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://admissions:admissions@db:5432/admissions
+      CORS_ORIGINS: http://localhost:5173
+    ports:
+      - "5050:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: flask --app app run --host 0.0.0.0 --port 5000 --debug
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_URL: http://localhost:5050/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
