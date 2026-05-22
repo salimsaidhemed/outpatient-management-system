@@ -1,7 +1,17 @@
 import axios from 'axios'
 
+import { getToken } from './auth'
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5050/api',
+})
+
+api.interceptors.request.use(async (config) => {
+  const token = await getToken()
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
 })
 
 export async function getDashboard() {

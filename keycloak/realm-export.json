@@ -1,0 +1,65 @@
+{
+  "realm": "outpatient",
+  "enabled": true,
+  "displayName": "Outpatient Admissions",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "loginWithEmailAllowed": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "admissions_user",
+        "description": "Can access the outpatient admissions console"
+      },
+      {
+        "name": "admissions_admin",
+        "description": "Can administer outpatient admissions workflows"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "admissions-frontend",
+      "name": "Admissions Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:5173",
+      "baseUrl": "http://localhost:5173",
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "receptionist",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Front",
+      "lastName": "Desk",
+      "email": "receptionist@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "receptionist",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admissions_user"
+      ]
+    }
+  ]
+}

@@ -8,6 +8,38 @@ body {
   background: #f7f8fa;
 }
 
+.auth-screen {
+  align-items: center;
+  background: #eef2f4;
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-panel {
+  border-radius: 8px;
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  max-width: 420px;
+  padding: 28px;
+  width: 100%;
+}
+
+.login-panel h1 {
+  color: #17212b;
+  font-size: 1.6rem;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin: 4px 0 0;
+}
+
+.login-panel p {
+  color: #667085;
+  margin: 0 0 8px;
+}
+
 .app-sidebar {
   border-right: 1px solid #d9dee6;
 }

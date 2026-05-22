@@ -3,10 +3,18 @@ from datetime import date, datetime, timezone
 from flask import Blueprint, jsonify, request
 from sqlalchemy import desc, func, or_
 
+from .auth import require_auth
 from .extensions import db
 from .models import Admission, Patient
 
 api = Blueprint("api", __name__)
+
+
+@api.before_request
+def authenticate_api_request():
+    if request.method == "OPTIONS":
+        return None
+    return require_auth(lambda: None)()
 
 
 def parse_date(value, field_name):

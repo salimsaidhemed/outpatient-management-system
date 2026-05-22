@@ -1,5 +1,21 @@
 <template>
   <v-app>
+    <div v-if="authLoading" class="auth-screen">
+      <v-progress-circular color="primary" indeterminate size="46" />
+    </div>
+
+    <div v-else-if="!user.authenticated" class="auth-screen">
+      <v-sheet class="login-panel" border>
+        <div class="brand-mark">OA</div>
+        <h1>Outpatient Admissions</h1>
+        <p>Sign in to continue to the front desk console.</p>
+        <v-btn color="primary" size="large" prepend-icon="mdi-login" @click="login">
+          Sign in
+        </v-btn>
+      </v-sheet>
+    </div>
+
+    <template v-else>
     <v-navigation-drawer v-model="drawer" class="app-sidebar" width="280">
       <div class="brand-block">
         <div class="brand-mark">OA</div>
@@ -26,9 +42,13 @@
       <v-app-bar-nav-icon class="d-md-none" @click="drawer = !drawer" />
       <v-toolbar-title>{{ currentTitle }}</v-toolbar-title>
       <v-spacer />
+      <v-chip color="secondary" variant="tonal" prepend-icon="mdi-account-circle">
+        {{ user.name || user.username }}
+      </v-chip>
       <v-chip color="primary" variant="tonal" prepend-icon="mdi-calendar-clock">
         {{ todayLabel }}
       </v-chip>
+      <v-btn icon="mdi-logout" variant="text" @click="logout" />
     </v-app-bar>
 
     <v-main>
@@ -277,6 +297,7 @@
     </v-main>
 
     <ReceiptDialog v-model="receiptDialog" :receipt-data="receiptData" />
+    </template>
   </v-app>
 </template>
 
@@ -287,6 +308,7 @@ import PatientList from './components/PatientList.vue'
 import ReceiptDialog from './components/ReceiptDialog.vue'
 import StatusChip from './components/StatusChip.vue'
 import VisitHistory from './components/VisitHistory.vue'
+import { getUserProfile, initAuth, login, logout } from './services/auth'
 import {
   createAdmission,
   createPatient,
@@ -300,6 +322,8 @@ import {
 
 const drawer = ref(true)
 const activeTab = ref('dashboard')
+const authLoading = ref(true)
+const user = ref({ authenticated: false })
 const error = ref('')
 const savingPatient = ref(false)
 const savingAdmission = ref(false)
@@ -462,5 +486,12 @@ function loadPercent(count) {
   return Math.round((count / max) * 100)
 }
 
-onMounted(loadAll)
+onMounted(async () => {
+  await initAuth()
+  user.value = getUserProfile()
+  authLoading.value = false
+  if (user.value.authenticated) {
+    await loadAll()
+  }
+})
 </script>

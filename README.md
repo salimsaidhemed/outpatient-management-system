@@ -10,6 +10,7 @@ A modern MVP for outpatient front-desk workflows with a Flask REST API, PostgreS
 - Patient visit history
 - Dashboard metrics and department load
 - Printable admission receipt
+- Keycloak authentication
 
 ## Project Structure
 
@@ -57,8 +58,18 @@ Then open:
 - Frontend: http://localhost:5173
 - Backend health check: http://localhost:5050/health
 - API base: http://localhost:5050/api
+- Keycloak admin: http://localhost:8080
+
+Demo credentials:
+
+- App user: `receptionist` / `receptionist`
+- Keycloak admin: `admin` / `admin`
 
 The backend creates the initial database tables on startup for MVP convenience.
+
+The API requires a Keycloak bearer token for every `/api/*` request. The `outpatient`
+realm, `admissions-frontend` public client, and demo user are imported from
+`keycloak/realm-export.json` when the Keycloak container starts.
 
 ## API Endpoints
 
