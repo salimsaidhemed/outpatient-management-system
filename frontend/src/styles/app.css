@@ -10,34 +10,113 @@ body {
 
 .auth-screen {
   align-items: center;
-  background: #eef2f4;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(247, 248, 250, 0.96)),
+    #eef2f4;
   display: flex;
   min-height: 100vh;
   justify-content: center;
   padding: 24px;
 }
 
-.login-panel {
-  border-radius: 8px;
+.login-layout {
+  align-items: center;
   display: grid;
-  gap: 14px;
-  justify-items: start;
-  max-width: 420px;
-  padding: 28px;
+  gap: 48px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(340px, 420px);
+  max-width: 1080px;
   width: 100%;
 }
 
-.login-panel h1 {
+.login-copy {
+  display: grid;
+  gap: 22px;
+}
+
+.login-brand {
+  min-height: auto;
+  padding: 0;
+}
+
+.login-copy h1 {
+  color: #101828;
+  font-size: 3rem;
+  font-weight: 790;
+  letter-spacing: 0;
+  line-height: 1.02;
+  margin: 0;
+  max-width: 620px;
+}
+
+.login-copy p {
+  color: #475467;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 620px;
+}
+
+.login-signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.login-signals span {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  color: #344054;
+  display: inline-flex;
+  font-size: 0.9rem;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.login-signals .v-icon {
+  color: #19647e;
+  font-size: 1.05rem;
+}
+
+.login-panel {
+  border-radius: 8px;
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: 30px;
+  width: 100%;
+}
+
+.login-panel-header {
+  align-items: center;
+  color: #475467;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 680;
+  gap: 8px;
+  text-transform: uppercase;
+}
+
+.login-panel h2 {
   color: #17212b;
-  font-size: 1.6rem;
+  font-size: 1.55rem;
   letter-spacing: 0;
   line-height: 1.2;
-  margin: 4px 0 0;
+  margin: 0;
 }
 
 .login-panel p {
   color: #667085;
   margin: 0 0 8px;
+}
+
+.appbar-actions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
 }
 
 .app-sidebar {
@@ -306,12 +385,35 @@ body {
   .metric-grid,
   .content-grid,
   .form-grid,
-  .two-column {
+  .two-column,
+  .login-layout {
     grid-template-columns: 1fr;
+  }
+
+  .login-copy h1 {
+    font-size: 2.25rem;
   }
 
   .page-shell {
     padding: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  .appbar-actions {
+    gap: 6px;
+  }
+
+  .appbar-actions .v-chip {
+    max-width: 148px;
+  }
+
+  .login-layout {
+    gap: 28px;
+  }
+
+  .login-copy h1 {
+    font-size: 1.95rem;
   }
 }
 
