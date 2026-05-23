@@ -29,6 +29,11 @@ export async function createPatient(payload) {
   return data
 }
 
+export async function updatePatient(patientId, payload) {
+  const { data } = await api.patch(`/patients/${patientId}`, payload)
+  return data
+}
+
 export async function getPatient(patientId) {
   const { data } = await api.get(`/patients/${patientId}`)
   return data
@@ -46,6 +51,11 @@ export async function createAdmission(payload) {
 
 export async function dischargeAdmission(admissionId) {
   const { data } = await api.patch(`/admissions/${admissionId}/discharge`)
+  return data
+}
+
+export async function updateAdmissionStatus(admissionId, status) {
+  const { data } = await api.patch(`/admissions/${admissionId}/status`, { status })
   return data
 }
 
