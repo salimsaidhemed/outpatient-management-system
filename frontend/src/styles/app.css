@@ -310,6 +310,13 @@ body {
   white-space: nowrap;
 }
 
+.patient-link {
+  justify-content: flex-start;
+  min-width: 0;
+  padding-inline: 0;
+  text-transform: none;
+}
+
 .admin-grid {
   display: grid;
   gap: 14px;
