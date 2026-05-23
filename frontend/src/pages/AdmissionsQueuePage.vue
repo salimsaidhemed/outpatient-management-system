@@ -22,11 +22,23 @@
             <td>{{ admission.patient.fullName }}</td>
             <td>{{ admission.department }} · {{ admission.visitType }}</td>
             <td>{{ admission.provider }}</td>
-            <td><StatusChip :status="admission.status" /></td>
+            <td>
+              <v-select
+                v-if="canManageStatus"
+                :items="admissionStatuses"
+                :loading="updatingAdmissionId === admission.id"
+                :model-value="admission.status"
+                density="compact"
+                hide-details
+                style="max-width: 190px"
+                @update:model-value="updateAdmissionStatus(admission.id, $event)"
+              />
+              <StatusChip v-else :status="admission.status" />
+            </td>
             <td class="text-right table-actions">
               <v-btn icon="mdi-receipt-text" size="small" variant="text" @click="openReceipt(admission.id)" />
               <v-btn
-                v-if="canDischarge && admission.status !== 'Discharged'"
+                v-if="canManageStatus && admission.status !== 'Discharged'"
                 icon="mdi-logout"
                 size="small"
                 variant="text"
@@ -47,8 +59,16 @@ import StatusChip from '../components/StatusChip.vue'
 import { getUserProfile } from '../services/auth'
 import { useAdmissionsStore } from '../stores/admissionsStore'
 
-const { admissions, loadAdmissions, markDischarged, openReceipt } = useAdmissionsStore()
-const canDischarge = computed(() => getUserProfile().roles.includes('admissions_admin'))
+const {
+  admissionStatuses,
+  admissions,
+  loadAdmissions,
+  markDischarged,
+  openReceipt,
+  updateAdmissionStatus,
+  updatingAdmissionId,
+} = useAdmissionsStore()
+const canManageStatus = computed(() => getUserProfile().roles.includes('admissions_admin'))
 
 onMounted(loadAdmissions)
 </script>

@@ -9,6 +9,8 @@ import {
   getPatient,
   getPatients,
   getReceipt,
+  updateAdmissionStatus as patchAdmissionStatus,
+  updatePatient,
 } from '../services/api'
 
 const error = ref('')
@@ -21,6 +23,9 @@ const admissions = ref([])
 const selectedPatient = ref(null)
 const selectedVisits = ref([])
 const patientSearch = ref('')
+const editingPatient = ref(false)
+const savingPatientEdit = ref(false)
+const updatingAdmissionId = ref(null)
 
 const dashboard = reactive({
   totalPatients: 0,
@@ -31,6 +36,17 @@ const dashboard = reactive({
 })
 
 const patientForm = reactive({
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
+  sex: '',
+  phone: '',
+  email: '',
+  address: '',
+  emergencyContact: '',
+})
+
+const patientEditForm = reactive({
   firstName: '',
   lastName: '',
   dateOfBirth: '',
@@ -56,6 +72,7 @@ const sexOptions = ['Female', 'Male', 'Non-binary', 'Prefer not to say']
 const departments = ['General Medicine', 'Cardiology', 'Orthopedics', 'Pediatrics', 'Dermatology', 'Diagnostics']
 const visitTypes = ['Consultation', 'Follow-up', 'Procedure', 'Lab review', 'Urgent outpatient']
 const priorities = ['Routine', 'Priority', 'Urgent']
+const admissionStatuses = ['Admitted', 'In Progress', 'Ready for Discharge', 'Discharged', 'Cancelled']
 
 const patientOptions = computed(() =>
   patients.value.map((patient) => ({
@@ -75,6 +92,21 @@ function resetPatientForm() {
     address: '',
     emergencyContact: '',
   })
+}
+
+function preparePatientEdit(patient = selectedPatient.value) {
+  if (!patient) return
+  Object.assign(patientEditForm, {
+    firstName: patient.firstName,
+    lastName: patient.lastName,
+    dateOfBirth: patient.dateOfBirth,
+    sex: patient.sex,
+    phone: patient.phone,
+    email: patient.email || '',
+    address: patient.address,
+    emergencyContact: patient.emergencyContact || '',
+  })
+  editingPatient.value = true
 }
 
 function resetAdmissionForm(patientId = null) {
@@ -157,6 +189,18 @@ async function loadPatientDetail(patientId) {
   return data
 }
 
+async function savePatientEdit() {
+  if (!selectedPatient.value) return null
+  savingPatientEdit.value = true
+  const patient = await withErrorHandling(() => updatePatient(selectedPatient.value.id, { ...patientEditForm }))
+  savingPatientEdit.value = false
+  if (!patient) return null
+  selectedPatient.value = patient
+  editingPatient.value = false
+  await loadPatients()
+  return patient
+}
+
 async function openReceipt(admissionId) {
   const data = await withErrorHandling(() => getReceipt(admissionId))
   if (!data) return
@@ -169,6 +213,21 @@ async function markDischarged(admissionId) {
   await loadAll()
 }
 
+async function updateAdmissionStatus(admissionId, status) {
+  updatingAdmissionId.value = admissionId
+  const admission = await withErrorHandling(() => patchAdmissionStatus(admissionId, status))
+  updatingAdmissionId.value = null
+  if (!admission) return null
+
+  admissions.value = admissions.value.map((item) => (item.id === admission.id ? admission : item))
+  dashboard.recentAdmissions = dashboard.recentAdmissions.map((item) =>
+    item.id === admission.id ? admission : item,
+  )
+  selectedVisits.value = selectedVisits.value.map((visit) => (visit.id === admission.id ? admission : visit))
+  await loadDashboard()
+  return admission
+}
+
 function loadPercent(count) {
   const max = Math.max(...dashboard.departmentLoad.map((item) => item.count), 1)
   return Math.round((count / max) * 100)
@@ -177,9 +236,11 @@ function loadPercent(count) {
 export function useAdmissionsStore() {
   return {
     admissionForm,
+    admissionStatuses,
     admissions,
     dashboard,
     departments,
+    editingPatient,
     error,
     loadAdmissions,
     loadAll,
@@ -189,21 +250,27 @@ export function useAdmissionsStore() {
     loadPercent,
     markDischarged,
     openReceipt,
+    patientEditForm,
     patientForm,
     patientOptions,
     patientSearch,
     patients,
+    preparePatientEdit,
     priorities,
     receiptData,
     receiptDialog,
     savingAdmission,
     savingPatient,
+    savePatientEdit,
+    savingPatientEdit,
     selectPatient,
     selectedPatient,
     selectedVisits,
     sexOptions,
     submitAdmission,
     submitPatient,
+    updateAdmissionStatus,
+    updatingAdmissionId,
     visitTypes,
   }
 }

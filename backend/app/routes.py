@@ -30,6 +30,12 @@ def required(payload, fields):
         raise ValueError(f"Missing required field(s): {', '.join(missing)}")
 
 
+def reject_blank(payload, fields):
+    blank = [field for field in fields if field in payload and not str(payload.get(field) or "").strip()]
+    if blank:
+        raise ValueError(f"Field(s) cannot be blank: {', '.join(blank)}")
+
+
 def next_mrn():
     value = db.session.query(func.count(Patient.id)).scalar() + 1
     return f"MRN-{value:06d}"
@@ -50,7 +56,11 @@ def handle_value_error(error):
 def dashboard():
     today = date.today()
     total_patients = db.session.query(func.count(Patient.id)).scalar()
-    active_admissions = db.session.query(func.count(Admission.id)).filter(Admission.status != "Discharged").scalar()
+    active_admissions = (
+        db.session.query(func.count(Admission.id))
+        .filter(Admission.status.notin_(["Discharged", "Cancelled"]))
+        .scalar()
+    )
     visits_today = (
         db.session.query(func.count(Admission.id))
         .filter(func.date(Admission.admitted_at) == today)
@@ -120,6 +130,34 @@ def get_patient(patient_id):
     return {"patient": patient.to_dict(), "visits": [visit.to_dict(include_patient=False) for visit in visits]}
 
 
+@api.patch("/patients/<int:patient_id>")
+@require_roles("admissions_user", "admissions_admin")
+def update_patient(patient_id):
+    patient = Patient.query.get_or_404(patient_id)
+    payload = request.get_json() or {}
+    reject_blank(payload, ["firstName", "lastName", "dateOfBirth", "sex", "phone", "address"])
+
+    if "firstName" in payload:
+        patient.first_name = payload["firstName"].strip()
+    if "lastName" in payload:
+        patient.last_name = payload["lastName"].strip()
+    if "dateOfBirth" in payload:
+        patient.date_of_birth = parse_date(payload["dateOfBirth"], "dateOfBirth")
+    if "sex" in payload:
+        patient.sex = payload["sex"]
+    if "phone" in payload:
+        patient.phone = payload["phone"]
+    if "email" in payload:
+        patient.email = payload.get("email") or None
+    if "address" in payload:
+        patient.address = payload["address"]
+    if "emergencyContact" in payload:
+        patient.emergency_contact = payload.get("emergencyContact") or None
+
+    db.session.commit()
+    return patient.to_dict()
+
+
 @api.get("/admissions")
 def list_admissions():
     admissions = Admission.query.order_by(desc(Admission.admitted_at)).all()
@@ -158,6 +196,23 @@ def discharge_admission(admission_id):
     admission = Admission.query.get_or_404(admission_id)
     admission.status = "Discharged"
     admission.discharged_at = datetime.now(timezone.utc)
+    db.session.commit()
+    return admission.to_dict()
+
+
+@api.patch("/admissions/<int:admission_id>/status")
+@require_roles("admissions_admin")
+def update_admission_status(admission_id):
+    admission = Admission.query.get_or_404(admission_id)
+    payload = request.get_json() or {}
+    required(payload, ["status"])
+
+    allowed_statuses = {"Admitted", "In Progress", "Ready for Discharge", "Discharged", "Cancelled"}
+    if payload["status"] not in allowed_statuses:
+        raise ValueError(f"status must be one of: {', '.join(sorted(allowed_statuses))}")
+
+    admission.status = payload["status"]
+    admission.discharged_at = datetime.now(timezone.utc) if admission.status == "Discharged" else None
     db.session.commit()
     return admission.to_dict()
 

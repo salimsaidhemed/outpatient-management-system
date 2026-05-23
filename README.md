@@ -91,9 +91,11 @@ Frontend routes:
 - `GET /api/patients?q=`
 - `POST /api/patients`
 - `GET /api/patients/<patient_id>`
+- `PATCH /api/patients/<patient_id>`
 - `GET /api/admissions`
 - `POST /api/admissions`
 - `PATCH /api/admissions/<admission_id>/discharge`
+- `PATCH /api/admissions/<admission_id>/status`
 - `GET /api/admissions/<admission_id>/receipt`
 
 ## Suggested Next Steps

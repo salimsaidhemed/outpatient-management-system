@@ -70,9 +70,11 @@ Every `/api/*` route requires a valid Keycloak bearer token. Some routes also re
 | `/api/patients` | `GET` | Any authenticated user |
 | `/api/patients` | `POST` | `admissions_user` or `admissions_admin` |
 | `/api/patients/<patient_id>` | `GET` | Any authenticated user |
+| `/api/patients/<patient_id>` | `PATCH` | `admissions_user` or `admissions_admin` |
 | `/api/admissions` | `GET` | Any authenticated user |
 | `/api/admissions` | `POST` | `admissions_user` or `admissions_admin` |
 | `/api/admissions/<admission_id>/discharge` | `PATCH` | `admissions_admin` only |
+| `/api/admissions/<admission_id>/status` | `PATCH` | `admissions_admin` only |
 | `/api/admissions/<admission_id>/receipt` | `GET` | Any authenticated user |
 
 ## Enforcement Notes
