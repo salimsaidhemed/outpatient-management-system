@@ -38,6 +38,10 @@ def decode_token(token):
     return payload
 
 
+def current_user_roles():
+    return g.current_user.get("realm_access", {}).get("roles", [])
+
+
 def require_auth(view):
     @wraps(view)
     def wrapped(*args, **kwargs):
@@ -54,3 +58,17 @@ def require_auth(view):
         return view(*args, **kwargs)
 
     return wrapped
+
+
+def require_roles(*allowed_roles):
+    def decorator(view):
+        @wraps(view)
+        def wrapped(*args, **kwargs):
+            user_roles = set(current_user_roles())
+            if not user_roles.intersection(allowed_roles):
+                return jsonify({"error": "Forbidden", "requiredRoles": list(allowed_roles)}), 403
+            return view(*args, **kwargs)
+
+        return wrapped
+
+    return decorator
