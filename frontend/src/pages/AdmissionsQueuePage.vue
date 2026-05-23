@@ -2,8 +2,16 @@
   <section class="stack">
     <v-sheet class="panel" border>
       <div class="panel-header">
-        <h2>Admissions queue</h2>
-        <v-btn icon="mdi-refresh" variant="text" @click="loadAdmissions" />
+        <div>
+          <h2>Admissions queue</h2>
+          <p class="panel-subtitle">Open a patient record to review demographics, edit details, or inspect visits.</p>
+        </div>
+        <div class="detail-actions">
+          <v-btn color="secondary" variant="tonal" prepend-icon="mdi-account-search" :to="{ name: 'patients' }">
+            Search patients
+          </v-btn>
+          <v-btn icon="mdi-refresh" variant="text" @click="loadAdmissions" />
+        </div>
       </div>
       <v-table density="comfortable">
         <thead>
@@ -19,7 +27,15 @@
         <tbody>
           <tr v-for="admission in admissions" :key="admission.id">
             <td>{{ admission.admissionNo }}</td>
-            <td>{{ admission.patient.fullName }}</td>
+            <td>
+              <v-btn
+                class="patient-link"
+                variant="text"
+                :to="{ name: 'patient-detail', params: { patientId: admission.patient.id } }"
+              >
+                {{ admission.patient.fullName }}
+              </v-btn>
+            </td>
             <td>{{ admission.department }} · {{ admission.visitType }}</td>
             <td>{{ admission.provider }}</td>
             <td>
