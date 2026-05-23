@@ -3,7 +3,7 @@ from datetime import date, datetime, timezone
 from flask import Blueprint, jsonify, request
 from sqlalchemy import desc, func, or_
 
-from .auth import require_auth
+from .auth import require_auth, require_roles
 from .extensions import db
 from .models import Admission, Patient
 
@@ -92,6 +92,7 @@ def list_patients():
 
 
 @api.post("/patients")
+@require_roles("admissions_user", "admissions_admin")
 def create_patient():
     payload = request.get_json() or {}
     required(payload, ["firstName", "lastName", "dateOfBirth", "sex", "phone", "address"])
@@ -126,6 +127,7 @@ def list_admissions():
 
 
 @api.post("/admissions")
+@require_roles("admissions_user", "admissions_admin")
 def create_admission():
     payload = request.get_json() or {}
     required(
@@ -151,6 +153,7 @@ def create_admission():
 
 
 @api.patch("/admissions/<int:admission_id>/discharge")
+@require_roles("admissions_admin")
 def discharge_admission(admission_id):
     admission = Admission.query.get_or_404(admission_id)
     admission.status = "Discharged"

@@ -63,13 +63,28 @@ Then open:
 Demo credentials:
 
 - App user: `receptionist` / `receptionist`
+- Admin user: `admin.reception` / `admin`
 - Keycloak admin: `admin` / `admin`
 
 The backend creates the initial database tables on startup for MVP convenience.
 
 The API requires a Keycloak bearer token for every `/api/*` request. The `outpatient`
-realm, `admissions-frontend` public client, and demo user are imported from
+realm, `admissions-frontend` public client, demo users, and roles are imported from
 `keycloak/realm-export.json` when the Keycloak container starts.
+
+Role model:
+
+- `admissions_user`: access dashboard, register patients, create admissions, view history, and print receipts.
+- `admissions_admin`: access admin-only routes and discharge outpatient admissions.
+
+Frontend routes:
+
+- `/`: dashboard
+- `/patients/register`: patient registration
+- `/admissions/new`: outpatient admission
+- `/admissions`: admissions queue
+- `/patients/history`: visit history
+- `/admin`: admin-only workspace
 
 ## API Endpoints
 

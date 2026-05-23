@@ -19,7 +19,7 @@ export function initAuth() {
 }
 
 export function login() {
-  return keycloak.login()
+  return keycloak.login({ redirectUri: window.location.href })
 }
 
 export function logout() {

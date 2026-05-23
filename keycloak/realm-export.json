@@ -60,6 +60,25 @@
       "realmRoles": [
         "admissions_user"
       ]
+    },
+    {
+      "username": "admin.reception",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admissions",
+      "lastName": "Admin",
+      "email": "admin.reception@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admissions_user",
+        "admissions_admin"
+      ]
     }
   ]
 }
