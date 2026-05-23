@@ -60,11 +60,7 @@ Then open:
 - API base: http://localhost:5050/api
 - Keycloak admin: http://localhost:8080
 
-Demo credentials:
-
-- App user: `receptionist` / `receptionist`
-- Admin user: `admin.reception` / `admin`
-- Keycloak admin: `admin` / `admin`
+Demo users are imported for local development. See `docs/access-control.md` for role assignments.
 
 The backend creates the initial database tables on startup for MVP convenience.
 

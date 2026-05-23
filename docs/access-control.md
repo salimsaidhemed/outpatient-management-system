@@ -18,12 +18,12 @@ Current realm roles:
 - `admissions_user`
 - `admissions_admin`
 
-Demo users:
+Demo users provisioned by the local realm import:
 
-| Username | Password | Roles |
-| --- | --- | --- |
-| `receptionist` | `receptionist` | `admissions_user` |
-| `admin.reception` | `admin` | `admissions_user`, `admissions_admin` |
+| Username | Roles |
+| --- | --- |
+| `receptionist` | `admissions_user` |
+| `admin.reception` | `admissions_user`, `admissions_admin` |
 
 ## Role Intent
 
@@ -95,7 +95,4 @@ Useful URLs:
 - API: http://localhost:5050/api
 - Keycloak: http://localhost:8080
 
-Keycloak admin:
-
-- Username: `admin`
-- Password: `admin`
+Keycloak admin credentials are configured through the local Docker Compose environment. Do not publish production credentials in repository documentation.
