@@ -78,10 +78,11 @@ See `docs/access-control.md` for the complete roles and access matrix.
 Frontend routes:
 
 - `/`: dashboard
+- `/patients`: patient search
+- `/patients/<patient_id>`: patient detail and visit history
 - `/patients/register`: patient registration
 - `/admissions/new`: outpatient admission
 - `/admissions`: admissions queue
-- `/patients/history`: visit history
 - `/admin`: admin-only workspace
 
 ## API Endpoints

@@ -2,7 +2,10 @@
   <section class="stack">
     <v-sheet class="panel" border>
       <div class="panel-header">
-        <h2>Visit history</h2>
+        <div>
+          <h2>Patient search</h2>
+          <p class="panel-subtitle">Find a patient record, then open their demographic profile and visit history.</p>
+        </div>
         <v-text-field
           v-model="patientSearch"
           density="compact"
@@ -30,25 +33,26 @@
             <td>{{ patient.age }}</td>
             <td>{{ patient.phone }}</td>
             <td class="text-right">
-              <v-btn icon="mdi-history" size="small" variant="text" @click="selectPatient(patient)" />
+              <v-btn
+                icon="mdi-card-account-details-outline"
+                size="small"
+                variant="text"
+                :to="{ name: 'patient-detail', params: { patientId: patient.id } }"
+              />
             </td>
           </tr>
         </tbody>
       </v-table>
     </v-sheet>
-
-    <VisitHistory :selected-patient="selectedPatient" :visits="selectedVisits" />
   </section>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
 
-import VisitHistory from '../components/VisitHistory.vue'
 import { useAdmissionsStore } from '../stores/admissionsStore'
 
-const { loadPatients, patientSearch, patients, selectPatient, selectedPatient, selectedVisits } =
-  useAdmissionsStore()
+const { loadPatients, patientSearch, patients } = useAdmissionsStore()
 
 onMounted(loadPatients)
 </script>

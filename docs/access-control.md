@@ -45,10 +45,11 @@ The router uses route metadata to decide which roles can access each workspace p
 | Route | Screen | `admissions_user` | `admissions_admin` |
 | --- | --- | --- | --- |
 | `/` | Dashboard | Yes | Yes |
+| `/patients` | Patient search | Yes | Yes |
+| `/patients/<patient_id>` | Patient detail and visit history | Yes | Yes |
 | `/patients/register` | Register patient | Yes | Yes |
 | `/admissions/new` | Admit outpatient | Yes | Yes |
 | `/admissions` | Admissions queue | Yes | Yes |
-| `/patients/history` | Visit history | Yes | Yes |
 | `/admin` | Administration | No | Yes |
 | `/access-denied` | Access denied | Yes | Yes |
 

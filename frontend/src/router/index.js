@@ -5,8 +5,9 @@ import AdminPage from '../pages/AdminPage.vue'
 import AdmissionsQueuePage from '../pages/AdmissionsQueuePage.vue'
 import AdmitOutpatientPage from '../pages/AdmitOutpatientPage.vue'
 import DashboardPage from '../pages/DashboardPage.vue'
+import PatientDetailPage from '../pages/PatientDetailPage.vue'
+import PatientSearchPage from '../pages/PatientSearchPage.vue'
 import RegisterPatientPage from '../pages/RegisterPatientPage.vue'
-import VisitHistoryPage from '../pages/VisitHistoryPage.vue'
 import { getUserProfile, initAuth } from '../services/auth'
 
 export const navItems = [
@@ -16,6 +17,14 @@ export const navItems = [
     path: '/',
     icon: 'mdi-view-dashboard-outline',
     component: DashboardPage,
+    roles: ['admissions_user', 'admissions_admin'],
+  },
+  {
+    title: 'Patients',
+    name: 'patients',
+    path: '/patients',
+    icon: 'mdi-account-search-outline',
+    component: PatientSearchPage,
     roles: ['admissions_user', 'admissions_admin'],
   },
   {
@@ -43,14 +52,6 @@ export const navItems = [
     roles: ['admissions_user', 'admissions_admin'],
   },
   {
-    title: 'Visit history',
-    name: 'history',
-    path: '/patients/history',
-    icon: 'mdi-history',
-    component: VisitHistoryPage,
-    roles: ['admissions_user', 'admissions_admin'],
-  },
-  {
     title: 'Admin',
     name: 'admin',
     path: '/admin',
@@ -67,6 +68,20 @@ const routes = [
     path,
     meta: { requiresAuth: true, roles, title },
   })),
+  {
+    component: PatientDetailPage,
+    name: 'patient-detail',
+    path: '/patients/:patientId',
+    meta: {
+      requiresAuth: true,
+      roles: ['admissions_user', 'admissions_admin'],
+      title: 'Patient detail',
+    },
+  },
+  {
+    redirect: { name: 'patients' },
+    path: '/patients/history',
+  },
   {
     component: AccessDeniedPage,
     name: 'access-denied',

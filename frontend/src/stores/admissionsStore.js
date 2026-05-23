@@ -145,6 +145,16 @@ async function selectPatient(patient) {
   selectedPatient.value = data.patient
   selectedVisits.value = data.visits
   admissionForm.patientId = data.patient.id
+  return data
+}
+
+async function loadPatientDetail(patientId) {
+  const data = await withErrorHandling(() => getPatient(patientId))
+  if (!data) return
+  selectedPatient.value = data.patient
+  selectedVisits.value = data.visits
+  admissionForm.patientId = data.patient.id
+  return data
 }
 
 async function openReceipt(admissionId) {
@@ -175,6 +185,7 @@ export function useAdmissionsStore() {
     loadAll,
     loadDashboard,
     loadPatients,
+    loadPatientDetail,
     loadPercent,
     markDischarged,
     openReceipt,
