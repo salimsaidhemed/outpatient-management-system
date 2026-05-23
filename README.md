@@ -77,6 +77,8 @@ Role model:
 - `admissions_user`: access dashboard, register patients, create admissions, view history, and print receipts.
 - `admissions_admin`: access admin-only routes and discharge outpatient admissions.
 
+See `docs/access-control.md` for the complete roles and access matrix.
+
 Frontend routes:
 
 - `/`: dashboard
