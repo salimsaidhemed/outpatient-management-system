@@ -4,7 +4,11 @@
       <div class="panel-header">
         <h2>Register patient</h2>
       </div>
-      <v-form @submit.prevent="submitPatient(() => router.push({ name: 'admit' }))">
+      <v-form
+        @submit.prevent="
+          submitPatient((patient) => router.push({ name: 'patient-detail', params: { patientId: patient.id } }))
+        "
+      >
         <div class="two-column">
           <v-text-field v-model="patientForm.firstName" label="First name" required />
           <v-text-field v-model="patientForm.lastName" label="Last name" required />
